@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # -----------------------------
+  # MongoDB خاص بالـ Products Service
+  # -----------------------------
+  mongo-products:
+    image: mongo:6
+    container_name: mongo-products
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: products-service
+    volumes:
+      - mongo-products-data:/data/db
+
+ 
+  redis-products:
+    image: redis:7
+    container_name: redis-products
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-products-data:/data
+
+ 
+  products-service:
+    build: .
+    container_name: products-service
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - mongo-products
+      - redis-products
+ 
+volumes:
+  mongo-products-data:
+  redis-products-data:
