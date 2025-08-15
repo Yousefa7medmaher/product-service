@@ -29,9 +29,23 @@ jobs:
           echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> .env
           echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> .env
           echo "CLOUDINARY_URL=${{ secrets.CLOUDINARY_URL }}" >> .env
+          echo "AUTH_SERVICE_URL=${{ secrets.AUTH_SERVICE_URL }}" >> .env
+          echo "ALLOWED_ORIGINS=${{ secrets.ALLOWED_ORIGINS }}" >> .env
 
       #   Build and start services with Docker Compose
       - name: Deploy with Docker Compose
         run: |
           docker-compose down
           docker-compose up -d --build
+
+      #   Wait for services to be healthy
+      - name: Wait for services to be ready
+        run: |
+          echo "Waiting for services to start..."
+          sleep 30
+
+      #   Health check
+      - name: Health check
+        run: |
+          curl -f http://localhost:3000/health || exit 1
+          echo "✅ Products service is healthy!"
