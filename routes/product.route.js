@@ -36,4 +36,17 @@ router.delete('/:id',
     productController.deleteProduct
 );
 
+
+// **Stock management routes** - protected (admin only)
+router.patch('/:id/increase-stock',
+    authenticateRole(['admin']),
+    productController.increaseStock
+);
+
+router.patch('/:id/decrease-stock',
+    authenticateRole(['admin']),
+    productController.decreaseStock
+);
+
+
 export default router;

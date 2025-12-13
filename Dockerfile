@@ -1,22 +1,23 @@
 FROM node:18
 
-# 2️⃣ Set working directory
+# 1️⃣ Set working directory
 WORKDIR /app
 
-# 3️⃣ Copy package files first (لتسريع build)
+# 2️⃣ Copy package files
 COPY package*.json ./
 
-# 4️⃣ Install dependencies
+# 3️⃣ Install dependencies
 RUN npm install --production
 
-# 5️⃣ Copy source code
+# 4️⃣ Copy source code
 COPY . .
 
-# 6️⃣ Expose port
+# 5️⃣ Expose port
 EXPOSE 3000
 
-# 7️⃣ Set environment
+# 6️⃣ Environment
 ENV NODE_ENV=production
+ENV PORT=3000
 
-# 8️⃣ Start the app
-CMD ["node", "index.js"]
+# 7️⃣ Start the server
+CMD ["node", "src/server.js"]

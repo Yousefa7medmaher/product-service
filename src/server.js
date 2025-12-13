@@ -20,7 +20,7 @@ import errorHandler from '../middleware/errorHandler.js';
 
 // Environment configuration
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const API_VERSION = 'v1';
 
 console.log('=================================');
