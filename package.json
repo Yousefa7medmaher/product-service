@@ -26,5 +26,13 @@
   "devDependencies": {
     "concurrently": "^9.2.0",
     "nodemon": "^3.1.10"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yousefa7medmaher/product-service.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Yousefa7medmaher/product-service/issues"
+  },
+  "homepage": "https://github.com/Yousefa7medmaher/product-service#readme"
 }
