@@ -28,31 +28,20 @@ jobs:
 
       - name: Run tests
         run: npm test
-        continue-on-error: true
-        
+
       - name: Build Docker image
         id: docker_build
         run: |
-          IMAGE_TAG=${GITHUB_SHA}
+          IMAGE_TAG=${GITHUB_SHA::8}  # اختصار SHA لأول 8 حروف
           docker build -t yousef2005/product-service:${IMAGE_TAG} .
           echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+          echo "${IMAGE_TAG}" > image_tag.txt
 
-      - name: Save IMAGE_TAG
-        run: echo "${GITHUB_SHA}" > image_tag.txt
-
-      - name: Upload IMAGE_TAG as artifact
-        uses: actions/upload-artifact@v7.0.0
+      - name: Upload IMAGE_TAG artifact
+        uses: actions/upload-artifact@v3
         with:
           name: image-tag
           path: image_tag.txt
-
-    
-      - name: Save Docker image as artifact
-        uses: actions/upload-artifact@v7.0.0
-        with:
-          name: docker-image
-          path: |
-            ./ 
 
   cd:
     needs: ci
@@ -62,15 +51,18 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
       - name: Download IMAGE_TAG artifact
-        uses: actions/download-artifact@v8.0.0
+        uses: actions/download-artifact@v3
         with:
           name: image-tag
+          path: .
 
       - name: Set IMAGE_TAG env
         run: |
           IMAGE_TAG=$(cat image_tag.txt)
           echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
@@ -78,8 +70,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Pull Docker image built in CI
-        run: |
-          docker pull yousef2005/product-service:${{ env.IMAGE_TAG }}
+        run: docker pull yousef2005/product-service:${{ env.IMAGE_TAG }}
 
       - name: Tag Docker image
         run: |
