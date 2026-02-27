@@ -54,9 +54,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Pull Docker image built in CI
-        run: docker pull yousef2005/product-service:${{ env.IMAGE_TAG }}
-
+ 
       - name: Tag Docker image
         run: |
           docker tag yousef2005/product-service:${{ env.IMAGE_TAG }} yousef2005/product-service:latest
