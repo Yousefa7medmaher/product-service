@@ -41,7 +41,7 @@ jobs:
         run: echo "${GITHUB_SHA}" > image_tag.txt
 
       - name: Upload IMAGE_TAG as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: image-tag
           path: image_tag.txt
@@ -63,7 +63,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
       - name: Download IMAGE_TAG artifact
-        uses: actions/download-artifact@v3
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: image-tag
 
