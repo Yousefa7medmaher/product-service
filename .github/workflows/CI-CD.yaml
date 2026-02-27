@@ -37,6 +37,16 @@ jobs:
           docker build -t yousef2005/product-service:${IMAGE_TAG} .
           echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
 
+      - name: Save IMAGE_TAG
+        run: echo "${GITHUB_SHA}" > image_tag.txt
+
+      - name: Upload IMAGE_TAG as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: image-tag
+          path: image_tag.txt
+
+    
       - name: Save Docker image as artifact
         uses: actions/upload-artifact@v7.0.0
         with:
@@ -52,7 +62,15 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+      - name: Download IMAGE_TAG artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: image-tag
 
+      - name: Set IMAGE_TAG env
+        run: |
+          IMAGE_TAG=$(cat image_tag.txt)
+          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
