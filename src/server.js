@@ -5,7 +5,8 @@ import { connectRedis } from '../config/redis.config.js';
 import cors from 'cors';
 import productRoutes from '../routes/product.route.js';
 import errorHandler from '../middleware/errorHandler.js';
-
+import mongoose from 'mongoose';
+import { redisClient } from '../config/redis.config.js';
 /**
  * Products Service - E-commerce Microservice
  *
@@ -20,9 +21,9 @@ import errorHandler from '../middleware/errorHandler.js';
 
 // Environment configuration
 const NODE_ENV = process.env.NODE_ENV || 'development';
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 const API_VERSION = 'v1';
-
+let isReady = false;
 console.log('=================================');
 console.log('🚀 PRODUCTS SERVICE STARTING...');
 console.log('=================================');
@@ -43,7 +44,7 @@ async function initializeConnections() {
 
         // Connect to Redis
         await connectRedis();
-
+        isReady = true ; 
         console.log('✅ All connections established successfully');
         return true;
     } catch (error) {
@@ -97,7 +98,29 @@ function configureApp() {
             version: API_VERSION
         });
     });
+    app.get('/ready', async (_req, res) => {
+        try {
+            const mongoReady = mongoose.connection.readyState === 1;
+            const redisReady = redisClient.isOpen === true;
 
+            if (!isReady || !mongoReady || !redisReady) {
+                return res.status(503).json({
+                    status: 'not_ready',
+                    mongo: mongoReady,
+                    redis: redisReady
+                });
+            }
+
+            return res.status(200).json({
+                status: 'ready'
+            });
+        } catch (error) {
+            return res.status(503).json({
+                status: 'not_ready',
+                error: error.message
+            });
+        }
+    });
     // API info endpoint
     app.get('/api', (_req, res) => {
         res.status(200).json({
@@ -130,7 +153,7 @@ function configureApp() {
 function setupGracefulShutdown(server) {
     const shutdown = (signal) => {
         console.log(`\n🛑 Received ${signal}. Starting graceful shutdown...`);
-
+        isReady = false; 
         server.close((err) => {
             if (err) {
                 console.error('❌ Error during server shutdown:', err);

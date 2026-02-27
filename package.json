@@ -7,24 +7,35 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "start:prod": "NODE_ENV=production node src/server.js"
+    "start:prod": "NODE_ENV=production node src/server.js",
+    "lint": "eslint src/**/*.js --max-warnings=0",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "test": "jest --coverage",
+    "test:watch": "jest --watchAll"
+
   },
   "author": "Yousef Ahmed Elazaly",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.11.0",
-    "cloudinary": "^1.41.3",
+    "cloudinary": "^2.9.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "express-validator": "^7.2.1",
     "mongoose": "^8.17.1",
     "multer": "^2.0.2",
-    "multer-storage-cloudinary": "^4.0.0",
+    "multer-storage-cloudinary": "^2.2.1",
     "redis": "^5.8.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "concurrently": "^9.2.0",
-    "nodemon": "^3.1.10"
+    "eslint": "^10.0.2",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-node": "^11.1.0",
+    "globals": "^17.3.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.8.1"
   }
 }
