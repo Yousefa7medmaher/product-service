@@ -38,7 +38,7 @@ jobs:
           echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
 
       - name: Save Docker image as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7.0.0
         with:
           name: docker-image
           path: |
