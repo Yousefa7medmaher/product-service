@@ -29,19 +29,8 @@ jobs:
       - name: Run tests
         run: npm test
         continue-on-error: true
-      - name: Build Docker image
-        id: docker_build
-        run: |
-          IMAGE_TAG=${GITHUB_SHA::8}  # اختصار SHA لأول 8 حروف
-          docker build -t yousef2005/product-service:${IMAGE_TAG} .
-          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
-          echo "${IMAGE_TAG}" > image_tag.txt
 
-      - name: Upload IMAGE_TAG artifact
-        uses: actions/upload-artifact@v7.0.0
-        with:
-          name: image-tag
-          path: image_tag.txt
+
 
   cd:
     needs: ci
@@ -52,15 +41,11 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Download IMAGE_TAG artifact
-        uses: actions/download-artifact@v8.0.0
-        with:
-          name: image-tag
-          path: .
-
-      - name: Set IMAGE_TAG env
+      - name: Build Docker image
+        id: docker_build
         run: |
-          IMAGE_TAG=$(cat image_tag.txt)
+          IMAGE_TAG=${GITHUB_SHA::8} 
+          docker build -t yousef2005/product-service:${IMAGE_TAG} .
           echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
 
       - name: Login to Docker Hub
