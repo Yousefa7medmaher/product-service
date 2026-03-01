@@ -1,12 +1,11 @@
 import 'dotenv/config';
 import express from 'express';
-import { connectDB } from '../config/db.config.js';
-import { connectRedis } from '../config/redis.config.js';
+import { connectDB } from '../config/db.config.js'; 
 import cors from 'cors';
 import productRoutes from '../routes/product.route.js';
 import errorHandler from '../middleware/errorHandler.js';
 import mongoose from 'mongoose';
-import { redisClient } from '../config/redis.config.js';
+import redisClient, { connectRedis } from '../config/redis.config.js';
 /**
  * Products Service - E-commerce Microservice
  *

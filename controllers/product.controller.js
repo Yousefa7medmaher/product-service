@@ -282,7 +282,79 @@ const ProductController = {
             console.error('Error in searchProducts controller:', error);
             next(error);
         }
+    },
+    /**
+     * Increase stock of a product
+     * PATCH /api/products/:id/increase-stock
+     * Body: { quantity: number }
+     */
+
+    async increaseStock(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { quantity } = req.body;
+
+            if (!quantity || isNaN(quantity) || quantity <= 0) {
+                return response.error(res, 'Quantity must be a positive number', 400);
+            }
+
+            const product = await productService.increaseStock(id, Number(quantity));
+
+            if (!product) {
+                return response.notFound(res, 'Product not found');
+            }
+
+            // Invalidate cache for this product
+            await invalidateProductCache(id);
+
+            return response.success(res, product, 200);
+        } catch (error) {
+            console.error('Error increasing stock:', error);
+            if (error.message === 'Invalid product ID') {
+                return response.error(res, 'Invalid product ID', 400);
+            }
+            next(error);
+        }
+    },
+
+    /**
+     * Decrease stock of a product
+     * PATCH /api/products/:id/decrease-stock
+     * Body: { quantity: number }
+     */
+    async decreaseStock(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { quantity } = req.body;
+
+            if (!quantity || isNaN(quantity) || quantity <= 0) {
+                return response.error(res, 'Quantity must be a positive number', 400);
+            }
+
+            const product = await productService.decreaseStock(id, Number(quantity));
+
+            if (!product) {
+                return response.notFound(res, 'Product not found');
+            }
+
+            // Invalidate cache for this product
+            await invalidateProductCache(id);
+
+            return response.success(res, product, 200);
+        } catch (error) {
+            console.error('Error decreasing stock:', error);
+            if (error.message === 'Invalid product ID') {
+                return response.error(res, 'Invalid product ID', 400);
+            }
+            if (error.message === 'Insufficient stock') {
+                return response.error(res, 'Insufficient stock', 400);
+            }
+            next(error);
+        }
     }
+    
 };
+
+
 
 export default ProductController;
