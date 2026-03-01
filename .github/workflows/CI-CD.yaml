@@ -2,9 +2,9 @@ name: CI/CD for product-service
 
 on:
   push:
-    branches: [main]
+    branches: [products-service]
   pull_request:
-    branches: [main]
+    branches: [products-service]
   workflow_dispatch:
 
 jobs:
