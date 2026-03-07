@@ -1,0 +1,14 @@
+apiVersion: v1 
+kind: Secret 
+metadata: 
+  name: product-secret 
+  labels: 
+    sec: product-sec-app
+type: Opaque 
+stringData: 
+  AUTH_SERVICE_URL: "http://auth-service:5000"
+  MONGO_URI: "mongodb://admin:admin123@mongo-products:27017/productsdb?authSource=admin"
+  CLOUDINARY_API_KEY: "785592829367777"
+  CLOUDINARY_API_SECRET: "VXBxxJoSy1SDTndwq1aGtiSnJiM"
+  CLOUDINARY_URL: "cloudinary://785592829367777:VXBxxJoSy1SDTndwq1aGtiSnJiM@dejdtplck"
+  REDIS_URL: "redis://redis-service:6379"

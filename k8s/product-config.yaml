@@ -1,0 +1,7 @@
+apiVersion: v1 
+kind: ConfigMap 
+metadata: 
+  name: product-config 
+data: 
+  CLOUDINARY_CLOUD_NAME: "dejdtplck"
+  PORT: "3000"

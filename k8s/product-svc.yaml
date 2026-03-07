@@ -1,0 +1,14 @@
+apiVersion: v1 
+kind: Service 
+metadata: 
+  name: app-product-svc-clusterip 
+  labels: 
+    app: product-service-svc-clusterip 
+spec: 
+  selector: 
+    app: product-app
+  type: ClusterIP 
+  ports: 
+    - port: 3000 
+      targetPort: 3000
+  
