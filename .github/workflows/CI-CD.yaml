@@ -37,31 +37,33 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
+    if: github.ref_name == 'products-service'
     steps:
-      - name: Checkout repo
+      - name: "Checkout repo"
         uses: actions/checkout@v3
-
-      - name: Build Docker image
-        id: docker_build
-        run: |
-          IMAGE_TAG=${GITHUB_SHA::8} 
-          docker build -t yousef2005/product-service:${IMAGE_TAG} .
-          echo "IMAGE_TAG=${IMAGE_TAG}" >> $GITHUB_ENV
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: "Configure AWS Credentials" 
+        uses: aws-actions/configure-aws-credentials@v6.0.0
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
+          aws-region: us-east-1
 
- 
-      - name: Tag Docker image
-        run: |
-          docker tag yousef2005/product-service:${{ env.IMAGE_TAG }} yousef2005/product-service:latest
-          docker tag yousef2005/product-service:${{ env.IMAGE_TAG }} yousef2005/product-service:1.0.${{ github.run_number }}
+      -  name: Amazon ECR "Login"
+         uses: karlonovak/amazon-ecr-login@v2.0.0
+         with:
+          registries: 484907510239.dkr.ecr.us-east-1.amazonaws.com/product-service 
 
-      - name: Push Docker image
-        run: |
-          docker push yousef2005/product-service:${{ env.IMAGE_TAG }}
-          docker push yousef2005/product-service:latest
-          docker push yousef2005/product-service:1.0.${{ github.run_number }}
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v7.0.0
+        with:
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: . 
+          push: true
+          tags: | 
+            484907510239.dkr.ecr.us-east-1.amazonaws.com/product-service:latest 
+            484907510239.dkr.ecr.us-east-1.amazonaws.com/product-service:v1.${{github.run_number}}
+            484907510239.dkr.ecr.us-east-1.amazonaws.com/product-service:${{ github.sha }}
+
+          
+         
