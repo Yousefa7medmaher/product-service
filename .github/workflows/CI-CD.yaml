@@ -48,10 +48,10 @@ jobs:
           aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID}}
           aws-region: us-east-1
 
-      -  name: Amazon ECR "Login"
-         uses: karlonovak/amazon-ecr-login@v2.0.0
-         with:
-          registries: 484907510239.dkr.ecr.us-east-1.amazonaws.com
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
       - name: Build and push Docker images
         uses: docker/build-push-action@v7.0.0
         with:
