@@ -1,4 +1,4 @@
-name: CI/CD for product-service
+name: CI for product-service
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  ci:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -32,8 +32,8 @@ jobs:
 
 
 
-  cd:
-    needs: ci
+  build-and-push:
+    needs: build-and-test
     runs-on: ubuntu-latest
     environment:
       name: production
