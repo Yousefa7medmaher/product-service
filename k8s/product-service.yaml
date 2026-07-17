@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: product-app-service
-          image: yousef2005/product-service:latest
+          image: 484907510239.dkr.ecr.us-east-1.amazonaws.com/product-service:v1.18
           ports:
             - containerPort: 3000
           envFrom:
